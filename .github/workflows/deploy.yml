@@ -5,12 +5,11 @@ on:
     branches:
       - main
 
-
 jobs:
 
   deploy:
 
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
 
@@ -23,12 +22,15 @@ jobs:
         docker build -t idealzing-nginx .
 
 
-    - name: Run Container
+    - name: Stop Existing Container
       run: |
-        docker stop nginx-demo || true
-        docker rm nginx-demo || true
+        docker stop nginx-demo || exit 0
+        docker rm nginx-demo || exit 0
 
-        docker run -d \
-        --name nginx-demo \
-        -p 8080:80 \
+
+    - name: Start New Container
+      run: |
+        docker run -d `
+        --name nginx-demo `
+        -p 8080:80 `
         idealzing-nginx
