@@ -18,12 +18,24 @@ jobs:
 
 
     - name: Build Docker Image
-      run: docker build -t idealzing-nginx .
+      run: |
+        docker build -t idealzing-nginx .
 
 
-    - name: Deploy Container
+    - name: Restart Container
+      shell: powershell
       run: |
         docker stop nginx-demo
-        docker rm nginx-demo
+        if ($LASTEXITCODE -ne 0) {
+          Write-Host "Container not running"
+        }
 
-        docker run -d --name nginx-demo -p 8080:80 idealzing-nginx
+        docker rm nginx-demo
+        if ($LASTEXITCODE -ne 0) {
+          Write-Host "Container does not exist"
+        }
+
+        docker run -d `
+        --name nginx-demo `
+        -p 8080:80 `
+        idealzing-nginx
