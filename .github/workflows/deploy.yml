@@ -1,0 +1,33 @@
+name: Deploy Nginx
+
+on:
+  push:
+    branches:
+      - main
+
+
+jobs:
+  deploy:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+
+    - name: Build Docker Image
+      run: |
+        docker build -t idealzing-nginx .
+
+
+    - name: Restart Container
+      run: |
+        docker stop nginx-demo || true
+        docker rm nginx-demo || true
+
+        docker run -d \
+        --name nginx-demo \
+        -p 8080:80 \
+        idealzing-nginx
