@@ -1,4 +1,4 @@
-name: Deploy Nginx
+name: Deploy Nginx Container
 
 on:
   push:
@@ -7,13 +7,14 @@ on:
 
 
 jobs:
+
   deploy:
 
     runs-on: ubuntu-latest
 
     steps:
 
-    - name: Checkout code
+    - name: Checkout Code
       uses: actions/checkout@v4
 
 
@@ -22,7 +23,7 @@ jobs:
         docker build -t idealzing-nginx .
 
 
-    - name: Restart Container
+    - name: Run Container
       run: |
         docker stop nginx-demo || true
         docker rm nginx-demo || true
